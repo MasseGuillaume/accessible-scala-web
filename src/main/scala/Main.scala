@@ -3,7 +3,7 @@ import akka.http.scaladsl._
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 
-import akka.actor.{ActorSystem, Props}
+import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
 
 import scala.concurrent.duration._
@@ -19,9 +19,11 @@ object Main {
 
     val routes = 
       get(
-        concat(
-          pathSingleSlash(getFromFile(new File("out/index.html"))),
-          path("public" / Remaining)(path => getFromFile(new File("out/public/" + path)))
+        pathPrefix("accessible-scala-web")(
+          concat(
+            pathSingleSlash(getFromFile(new File("index.html"))),
+            path(Remaining)(path => getFromFile(new File("accessible-scala-web/" + path)))
+          )
         )
       )
 
